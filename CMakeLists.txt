@@ -32,12 +32,16 @@ pico_sdk_init()
 # Add the project source files
 add_executable(${PROJECT_NAME}
     src/main.c
+    src/led.c
+    src/pin_init.c
+    src/eeprom.c
 
     # additional source files
 )
 
 # Add include directories
 target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/src
 
     # additional include directories:
@@ -50,6 +54,7 @@ target_link_libraries(${PROJECT_NAME}
     pico_stdlib
     hardware_pwm
     hardware_gpio
+    hardware_i2c
     # additional Pico SDK libraries
 )
 
