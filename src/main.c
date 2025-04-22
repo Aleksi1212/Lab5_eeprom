@@ -20,14 +20,17 @@ int main(void) {
 
     init_i2c(EEPROM_PORT, EEPROM_SDA_PIN, EEPROM_SCL_PIN, EEPROM_BAUDRATE);
 
-    bool sw_0_pressed = false,
-        sw_1_pressed = false,
-        sw_2_pressed = false;
+    uint sw_states[SW_COUNT][2] = {
+        { SW_0, 0 },
+        { SW_1, 0 },
+        { SW_2, 0 }
+    };
 
-    bool led_state[3] = { 1, 1, 1};
-
-    uint leds[3] = { LED_1, LED_2, LED_3 };
-
+    uint led_states[LED_COUNT][2] = {
+        { LED_1, 0 },
+        { LED_2, 0 },
+        { LED_3, 0 }
+    };
 
     uint16_t addresses[3][2] = {
         { EEPROM_MAX_ADDRESS - 5, EEPROM_MAX_ADDRESS - 6},
@@ -39,22 +42,27 @@ int main(void) {
         uint8_t byte = eeprom_read_byte(addresses[i][0]);
         uint8_t inverted_byte = eeprom_read_byte(addresses[i][1]);
 
-        if ((byte == 0 || byte == 1) && byte == ~inverted_byte) {
-            led_state[i] = byte;
+        if ((byte == 0 || byte == 1) && byte == (uint8_t)(~inverted_byte)) {
+            led_states[i][1] = byte;
         }
     }
 
     while (true)
     {
-        handle_led_state(SW_0, &sw_0_pressed, &led_state[2]);
-        handle_led_state(SW_1, &sw_1_pressed, &led_state[1]);
-        handle_led_state(SW_2, &sw_2_pressed, &led_state[0]);
-    
-        for (int i = 0; i < 3; i++) {
-            gpio_put(leds[i], led_state[i]);
+        for (int sw_i = 0; sw_i < SW_COUNT; sw_i++) {
+            handle_led_state(
+                sw_states[sw_i][0],
+                (bool*)(&sw_states[sw_i][1]),
+                (bool*)(&led_states[sw_i][1])
+            );
 
-            eeprom_write_bytes(addresses[i][0], led_state[i]);
-            eeprom_write_bytes(addresses[i][1], (uint8_t)(~led_state[i]));
+        }
+
+        for (int led_i = 0; led_i < LED_COUNT; led_i++) {
+            gpio_put(led_states[led_i][0], led_states[led_i][1]);
+
+            eeprom_write_bytes(addresses[led_i][0], led_states[led_i][1]);
+            eeprom_write_bytes(addresses[led_i][1], (uint8_t)(~led_states[led_i][1]));
         }
     }
     
