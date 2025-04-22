@@ -1,14 +1,19 @@
 #include "pico/stdlib.h"
+#include <stdio.h>
 #include "led.h"
 
-void handle_led_state(uint sw, bool *pressed, bool *led_state)
+void handle_led_state(uint sw, bool *was_pressed, bool *led_state)
 {
-    if (*pressed && gpio_get(sw) == 0) {
-        *pressed = false;
+    bool pressed = !gpio_get(sw);
+
+    if (pressed && !(*was_pressed)) {
+        *was_pressed = true;
     }
-    else if (!(*pressed) && gpio_get(sw) > 0) {
+
+    if (!pressed && *was_pressed) {
+        printf("toggled\n");
         *led_state = !(*led_state);
-        *pressed = true;
+        *was_pressed = false;
         sleep_ms(10);
     }
 }
