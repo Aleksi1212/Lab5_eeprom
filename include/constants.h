@@ -1,6 +1,9 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#define LED_COUNT 3
+#define SW_COUNT LED_COUNT
+
 #define LED_1 20
 #define LED_2 21
 #define LED_3 22
