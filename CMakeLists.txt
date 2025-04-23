@@ -35,6 +35,7 @@ add_executable(${PROJECT_NAME}
     src/led.c
     src/pin_init.c
     src/eeprom.c
+    src/logging.c
 
     # additional source files
 )

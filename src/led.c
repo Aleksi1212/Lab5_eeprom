@@ -5,6 +5,7 @@
 #include "led.h"
 #include "eeprom.h"
 #include "structs.h"
+#include "logging.h"
 
 static void set_led_state(ledstate_t *ls, uint8_t value)
 {
@@ -38,9 +39,14 @@ void read_led_states_from_eeprom(ledstate_t ls[3], uint16_t addresses[][2])
         set_led_state(&ls[1], 1);
         set_led_state(&ls[2], 0);
     }
+
+    for (int led_i = 0; led_i < LED_COUNT; led_i++) {
+        LOG("Led_%d: %s", led_i+1, ls[led_i].state ? "ON" : "OFF");
+    }
+    printf("\n");
 }
 
-void handle_led_state(uint sw, bool *was_pressed, ledstate_t *ls)
+void handle_led_state(uint sw, bool *was_pressed, ledstate_t *ls, int i)
 {
     bool pressed = !gpio_get(sw);
 
@@ -52,6 +58,6 @@ void handle_led_state(uint sw, bool *was_pressed, ledstate_t *ls)
         set_led_state(ls, !((*ls).state));
         *was_pressed = false;
 
-        printf("Led_%u state: %u\n", ls->led, ls->state);
+        LOG("Led_%d: %s", i, ls->state ? "ON" : "OFF");
     }
 }
