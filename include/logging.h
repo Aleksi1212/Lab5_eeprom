@@ -25,5 +25,7 @@
   } while (0)
 
 void clear_terminal();
+void write_log_entry_to_eeprom(const char *log_entry);
+void read_log_from_eeprom();
 
 #endif
