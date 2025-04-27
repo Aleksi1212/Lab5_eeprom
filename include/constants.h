@@ -19,4 +19,7 @@
 #define EEPROM_BAUDRATE 100 * 1000
 #define EEPROM_MAX_ADDRESS 0x7FFF
 
+#define MAX_LOG_ENTRIES 32
+#define LOG_ENTRY_SIZE 64
+
 #endif
