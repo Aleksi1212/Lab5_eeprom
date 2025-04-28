@@ -15,7 +15,7 @@ void eeprom_write_bytes(uint16_t mem_addr, uint8_t data)
     buff[2] = data;
 
     i2c_write_blocking(EEPROM_PORT, EEPROM_ADDR, buff, 3, false);
-    sleep_ms(5);
+    sleep_ms(2);
 }
 
 uint8_t eeprom_read_byte(uint16_t mem_addr)

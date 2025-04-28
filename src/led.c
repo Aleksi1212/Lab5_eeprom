@@ -41,7 +41,7 @@ void read_led_states_from_eeprom(ledstate_t ls[3], uint16_t addresses[][2])
     }
 
     for (int led_i = 0; led_i < LED_COUNT; led_i++) {
-        LOG("Led_%d: %s", led_i+1, ls[led_i].state ? "ON" : "OFF");
+        log_message("Led_%d: %s", led_i+1, ls[led_i].state ? "ON" : "OFF");
     }
     printf("\n");
 }
@@ -58,6 +58,6 @@ void handle_led_state(uint sw, bool *was_pressed, ledstate_t *ls, int i)
         set_led_state(ls, !((*ls).state));
         *was_pressed = false;
 
-        LOG("Led_%d: %s", i, ls->state ? "ON" : "OFF");
+        log_message("Led_%d: %s", i, ls->state ? "ON" : "OFF");
     }
 }

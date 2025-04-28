@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "pico/stdlib.h"
 #include "hardware/i2c.h"
 
@@ -44,6 +45,8 @@ int main(void) {
 
     read_led_states_from_eeprom(led_states, addresses);
 
+    char input[10];
+
     while (true)
     {
         for (int sw_i = 0; sw_i < SW_COUNT; sw_i++) {
@@ -60,6 +63,17 @@ int main(void) {
             
             eeprom_write_bytes(addresses[led_i][0], led_states[led_i].state);
             eeprom_write_bytes(addresses[led_i][1], led_states[led_i].not_state);
+        }
+
+        if (read_user_input(input, sizeof(input))) {
+            if (strcmp(input, "read") == 0) {
+                read_log();
+            } else if (strcmp(input, "erase") == 0) {
+                erase_log();
+                write_log_entry("Log erased");
+            } else {
+                fprintf(stderr, "Invalid command\n");
+            }
         }
 
         sleep_ms(10);
