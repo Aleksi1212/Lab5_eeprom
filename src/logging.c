@@ -32,7 +32,7 @@ void erase_log()
 {
     for (uint32_t i = 0; i < MAX_LOG_ENTRIES; i++) {
         uint16_t log_addr = i * LOG_ENTRY_SIZE;
-        eeprom_write_bytes(log_addr, 0);
+        eeprom_write_bytes(log_addr, 0, LOG_ENTRY_SIZE);
     }
 }
 
@@ -65,10 +65,8 @@ void write_log_entry(const char *log_entry)
         erase_log();
         printf("Log full erasing\n");
     }
-  
-    for (uint32_t i = 0; i < LOG_ENTRY_SIZE; i++) {
-        eeprom_write_bytes(log_address + i, buffer[i]);
-    }
+    
+    eeprom_write_bytes(log_address, buffer, LOG_ENTRY_SIZE);
 }
 
 void read_log()

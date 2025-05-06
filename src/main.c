@@ -12,7 +12,7 @@
 int main(void) {
     stdio_init_all();
     clear_terminal();
-
+    
     printf("BOOT\n");
 
     init_gpio_in(SW_0);
@@ -24,6 +24,8 @@ int main(void) {
     init_gpio_out(LED_3);
 
     init_i2c(EEPROM_PORT, EEPROM_SDA_PIN, EEPROM_SCL_PIN, EEPROM_BAUDRATE);
+
+    log_message("BOOT");
 
     uint sw_states[SW_COUNT][2] = {
         { SW_0, 0 },
@@ -60,9 +62,9 @@ int main(void) {
         
         for (int led_i = 0; led_i < LED_COUNT; led_i++) {
             gpio_put(led_states[led_i].led, led_states[led_i].state);
-            
-            eeprom_write_bytes(addresses[led_i][0], led_states[led_i].state);
-            eeprom_write_bytes(addresses[led_i][1], led_states[led_i].not_state);
+
+            eeprom_write_byte(addresses[led_i][0], led_states[led_i].state);
+            eeprom_write_byte(addresses[led_i][1], led_states[led_i].not_state);
         }
 
         if (read_user_input(input, sizeof(input))) {
